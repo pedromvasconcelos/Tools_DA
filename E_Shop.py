@@ -111,7 +111,7 @@ print('TN: ', conf_mat[0,0])
 print('FP: ', conf_mat[0,1])
 print('FN: ', conf_mat[1,0])
 
-# Selecting features with higher sifnificance and redefining feature set
+# Selecting features with higher sifnificance and redefining feature set trials were run for different combinations and this is the best model with 12 variables
 X = final_data[['PageValue', 'ExitRate', 'ProductRelated_Duration', 'Administrative', 'ProductRelated', 'Administrative_Duration', 'BounceRate','Month_Nov','Informational','Informational_Duration','Month_May','VisitorType']]
 
 feature_scaler = StandardScaler()
