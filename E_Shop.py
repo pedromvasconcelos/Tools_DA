@@ -44,7 +44,7 @@ print(dataset.info())
 categorical_features = ['Month']
 final_data = pd.get_dummies(dataset, columns = categorical_features)
 print(final_data.info())
-print(dataset.head(70))
+print(dataset.head(10))
 
 # Dividing dataset into label and feature sets. Transaction is our target variable
 X = final_data.drop('Transaction', axis = 1) 
