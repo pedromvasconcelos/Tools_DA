@@ -67,23 +67,24 @@ X_train, X_test, Y_train, Y_test = train_test_split( X_scaled, Y, test_size = 0.
 print(X_train.shape)
 print(X_test.shape)
 
-# Implementing Oversampling to balance the dataset; SMOTE stands for Synthetic Minority Oversampling TEchnique
 print("Number of observations in each class before oversampling (training data): \n", pd.Series(Y_train).value_counts())
 
-smote = SMOTE(random_state = 101)
+# Implementing Oversampling to balance the dataset; SMOTE stands for Synthetic Minority Oversampling TEchnique
+smote = SMOTE(random_state = 101) #Selected one integer on random_state to get same results
 X_train,Y_train = smote.fit_sample(X_train,Y_train)
 
 print("Number of observations in each class after oversampling (training data): \n", pd.Series(Y_train).value_counts())
 
 # Building Classification Decision Tree Model
-dtree = tree.DecisionTreeClassifier(criterion = 'entropy', max_depth = 3)
+#We are using "entropy" as we want to use information gain to build our tree Size of our trees are going to be 3 to avoid overfitting.
+dtree = tree.DecisionTreeClassifier(criterion = 'entropy', max_depth = 4) 
 dtree.fit(X_train, Y_train)
 featimp = pd.Series(dtree.feature_importances_, index=list(X)).sort_values(ascending=False)
 print(featimp)
 
 # Evaluating Decision Tree Model
 Y_pred = dtree.predict(X_test)
-print("Prediction Accuracy: ", metrics.accuracy_score(Y_test, Y_pred)) # Not a good idea coz imbalanced test set
+print("Prediction Accuracy: ", metrics.accuracy_score(Y_test, Y_pred)) #Our test dataset is imbalance so we shouldn't focus on the prediction
 conf_mat = metrics.confusion_matrix(Y_test, Y_pred)
 plt.figure(figsize=(8,6))
 sns.heatmap(conf_mat,annot=True)
