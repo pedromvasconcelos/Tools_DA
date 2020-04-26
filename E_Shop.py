@@ -46,9 +46,6 @@ final_data = pd.get_dummies(dataset, columns = categorical_features)
 print(final_data.info())
 print(dataset.head(10))
 
-
-final_data.to_csv('a.csv')
-
 # Dividing dataset into label and feature sets. Transaction is our target variable
 X = final_data.drop('Transaction', axis = 1) 
 Y = final_data['Transaction'] 
@@ -146,4 +143,46 @@ print('TN: ', conf_mat[0,0])
 print('FP: ', conf_mat[0,1])
 print('FN: ', conf_mat[1,0])
 
+# Implementing PCA to visualize dataset
+pca = PCA(n_components = 2)
+pca.fit(X_scaled)
+x_pca = pca.transform(X_scaled)
+print(pca.explained_variance_ratio_)
+print(sum(pca.explained_variance_ratio_))
+
+plt.figure(figsize = (8,6))
+plt.scatter(x_pca[:,0], x_pca[:,1], c=Y, cmap='plasma')
+plt.xlabel('First Principal Component')
+plt.ylabel('Second Principal Component')
+plt.show()
+
+#In orfer to achieve a sgnificant PCA we would need at least 5 componets
+pca = PCA(n_components = 5)
+pca.fit(X_scaled)
+x_pca = pca.transform(X_scaled)
+print(pca.explained_variance_ratio_)
+print(sum(pca.explained_variance_ratio_))
+
+
+# Implementing K-Means CLustering on dataset and visualizing clusters
+kmeans = KMeans(n_clusters = 2)#Two clusters from our target variable (transaction): True or False
+kmeans.fit(X_scaled)
+print(kmeans.cluster_centers_)
+plt.figure(figsize = (8,6))
+plt.scatter(x_pca[:,0], x_pca[:,1], c=kmeans.labels_, cmap='plasma')
+plt.xlabel('First Principal Component')
+plt.ylabel('Second Principal Component')
+plt.show()
+
+# Finding the number of clusters (K) and plotting the Elbow Plot (in our case we know it isn't useful as we have two clusters from our target variable)
+inertia = []
+for i in range(1,11):
+    kmeans = KMeans(n_clusters = i, random_state = 100)
+    kmeans.fit(X_scaled)
+    inertia.append(kmeans.inertia_)
+plt.plot(range(1, 11), inertia)
+plt.title('The Elbow Plot')
+plt.xlabel('Number of clusters')
+plt.ylabel('Inertia')
+plt.show()
 
