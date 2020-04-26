@@ -46,6 +46,9 @@ final_data = pd.get_dummies(dataset, columns = categorical_features)
 print(final_data.info())
 print(dataset.head(10))
 
+
+final_data.to_csv('a.csv')
+
 # Dividing dataset into label and feature sets. Transaction is our target variable
 X = final_data.drop('Transaction', axis = 1) 
 Y = final_data['Transaction'] 
@@ -91,7 +94,7 @@ print(best_parameters)
 best_result = gd_sr.best_score_ # Mean cross-validated score of the best_estimator
 print(best_result)
 
-# Building random forest using the tuned parameter
+# Building random forest using the tuned parameter (150)
 rfc = RandomForestClassifier(n_estimators=150, criterion='entropy', max_features='auto', random_state=1)
 rfc.fit(X_train,Y_train)
 featimp = pd.Series(rfc.feature_importances_, index=list(X)).sort_values(ascending=False)
@@ -125,6 +128,9 @@ X_train,Y_train = smote.fit_sample(X_train,Y_train)
 
 rfc = RandomForestClassifier(n_estimators=150, criterion='entropy', max_features='auto', random_state=1)
 rfc.fit(X_train,Y_train)
+#Contribution of variables on my best model
+featimp = pd.Series(rfc.feature_importances_, index=list(X)).sort_values(ascending=False)
+print(featimp)
 
 Y_pred = rfc.predict(X_test)
 conf_mat = metrics.confusion_matrix(Y_test, Y_pred)
@@ -139,3 +145,5 @@ print('TP: ', conf_mat[1,1])
 print('TN: ', conf_mat[0,0])
 print('FP: ', conf_mat[0,1])
 print('FN: ', conf_mat[1,0])
+
+
